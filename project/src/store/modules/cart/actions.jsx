@@ -4,3 +4,10 @@ export const addProductToCart = (product) => {
     payload: { product },
   };
 };
+
+export const updateStockList = (list) => {
+  return {
+    type: "UPDATE_STOCK_LIST",
+    payload: { list },
+  };
+};
