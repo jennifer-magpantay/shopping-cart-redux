@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addProductToCart } from "../store/modules/cart/actions";
+import { useDispatch } from "react-redux";
+import {
+  addProductToCart,
+  updateStockList,
+} from "../store/modules/cart/actions";
 
 import { api } from "../services/api";
 
 export const Catalog = () => {
   const [catalog, setCatalog] = useState([]);
-  const cartProducts = useSelector((state) => state.cart.products);
-  console.log("cart products", cartProducts);
   const dispatch = useDispatch();
 
   // basic way to fetch data from server
@@ -15,14 +16,25 @@ export const Catalog = () => {
     const fetchCatalogData = async () => {
       const response = await api.get("/products");
       const data = await response.data;
-      // add quantity prop to data objs
-      const formatedData = data.map((item) => {
-        const obj = { ...item, quantity: 1 };
-        return obj;
-      });
-      data && setCatalog(formatedData);
-    };
 
+      if (data) {
+        // add quantity prop to data objs
+        const formatedData = data.map((item) => {
+          const obj = { ...item, quantity: 1 };
+          return obj;
+        });
+        setCatalog(formatedData);
+        // update stock list
+        const formatedDataStock = data.map((item) => {
+          const stockObject = {
+            id: item.id,
+            quantity: item.stock,
+          };
+          return stockObject;
+        });
+        dispatch(updateStockList(formatedDataStock));
+      }
+    };
     fetchCatalogData();
   }, []);
 
@@ -34,10 +46,6 @@ export const Catalog = () => {
     },
     [dispatch]
   );
-
-  // const handleAddProductToCart = (item) => {
-  //   dispatch(addProductToCart(item));
-  // };
 
   return (
     <div>
