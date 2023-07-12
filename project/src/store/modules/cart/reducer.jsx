@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-
 // https://dummyjson.com/products
 // {
 //   id: 1,
@@ -23,6 +22,7 @@
 
 const INITIAL_STATE = {
   products: [],
+  stock: [],
 };
 
 export const cartReducer = (state = INITIAL_STATE, action) => {
@@ -38,7 +38,7 @@ export const cartReducer = (state = INITIAL_STATE, action) => {
       if (productIndex !== -1) {
         // Item already exists in the cart, update the quantity
         const updatedItems = [...state.products];
-        updatedItems[productIndex].quantity += product.quantity;
+        updatedItems[productIndex].quantity++;
         return {
           ...state,
           products: updatedItems,
@@ -51,6 +51,13 @@ export const cartReducer = (state = INITIAL_STATE, action) => {
         };
         //ps.: always return the prev value, if you want reducer to consider it - also to avoid errors
       }
+
+    case "UPDATE_STOCK_LIST":
+      const { list } = action.payload;
+      return {
+        ...state,
+        stock: [...state.stock, list],
+      };
 
     default:
       return INITIAL_STATE;
