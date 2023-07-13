@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
-  addProductToCart,
-  updateStockList,
+  addProductToCartRequest,
+  addProductToCartSuccess,
 } from "../store/modules/cart/actions";
 
 import { api } from "../services/api";
@@ -13,6 +13,7 @@ export const Catalog = () => {
 
   // basic way to fetch data from server
   useEffect(() => {
+    console.log("loading app");
     const fetchCatalogData = async () => {
       const response = await api.get("/products");
       const data = await response.data;
@@ -24,15 +25,6 @@ export const Catalog = () => {
           return obj;
         });
         setCatalog(formatedData);
-        // update stock list
-        const formatedDataStock = data.map((item) => {
-          const stockObject = {
-            id: item.id,
-            quantity: item.stock,
-          };
-          return stockObject;
-        });
-        dispatch(updateStockList(formatedDataStock));
       }
     };
     fetchCatalogData();
@@ -40,9 +32,11 @@ export const Catalog = () => {
 
   // passing the item as param on button event, will pass all info about the product item
   // there is no need to pass an event, get event.target.id and then find the correspondent id within catalog list
+
   const handleAddProductToCart = useCallback(
     (item) => {
-      dispatch(addProductToCart(item));
+      //dispatch(addProductToCartSuccess(item));
+      dispatch(addProductToCartRequest(item));
     },
     [dispatch]
   );
