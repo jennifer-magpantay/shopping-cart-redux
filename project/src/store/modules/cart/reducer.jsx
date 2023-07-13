@@ -22,14 +22,18 @@
 
 const INITIAL_STATE = {
   products: [],
-  stock: [],
 };
 
+/** TODO:
+ * - fix bug on add product to car success => the products list is reseting and not adding a new one
+ * - error is when adding a new item to list
+ */
 export const cartReducer = (state = INITIAL_STATE, action) => {
   //console.log(state, action);
   switch (action.type) {
-    case "ADD_PRODUCT_TO_CART":
+    case "ADD_PRODUCT_TO_CART_SUCCESS":
       const { product } = action.payload;
+      console.log("adding product to a cart", product);
       // check if the product already exists
       const productIndex = state.products.findIndex(
         (item) => item.id === product.id
@@ -45,19 +49,22 @@ export const cartReducer = (state = INITIAL_STATE, action) => {
         };
       } else {
         // Item does not exist in the cart, add it
-        return {
-          ...state,
-          products: [...state.products, product],
-        };
+        // PS.: SOME BUG RUNNING HERE!
+
+        // return {
+        //   ...state,
+        //   products: [...state.products, product],
+        // };
+
+        return (state.products = [...state.products, product]);
+
         //ps.: always return the prev value, if you want reducer to consider it - also to avoid errors
       }
 
-    case "UPDATE_STOCK_LIST":
-      const { list } = action.payload;
-      return {
-        ...state,
-        stock: [...state.stock, list],
-      };
+    case "ADD_PRODUCT_TO_CART_FAILURE":
+      const productId = action.payload;
+      console.log("no product in stock", productId);
+      break;
 
     default:
       return INITIAL_STATE;

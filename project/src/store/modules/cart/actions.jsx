@@ -1,13 +1,20 @@
-export const addProductToCart = (product) => {
+export const addProductToCartRequest = (product) => {
   return {
-    type: "ADD_PRODUCT_TO_CART",
+    type: "ADD_PRODUCT_TO_CART_REQUEST",
     payload: { product },
   };
 };
 
-export const updateStockList = (list) => {
+export const addProductToCartSuccess = (product) => {
   return {
-    type: "UPDATE_STOCK_LIST",
-    payload: { list },
+    type: "ADD_PRODUCT_TO_CART_SUCCESS",
+    payload: { product },
+  };
+};
+
+export const addProductToCartFailure = (productID) => {
+  return {
+    type: "ADD_PRODUCT_TO_CART_FAILURE",
+    payload: { productID },
   };
 };
